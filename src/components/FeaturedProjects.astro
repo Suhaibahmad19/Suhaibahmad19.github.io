@@ -1,0 +1,40 @@
+---
+import ProjectCard from './ProjectCard.astro';
+import { projects } from '../data/projects';
+
+const featured = projects.slice(0, 3);
+---
+
+<section id="featured-projects" class="py-12 sm:py-16">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Section Header -->
+    <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between mb-12">
+      <div>
+        <h2 class="text-3xl sm:text-4xl font-bold">
+          Featured <span class="gradient-text">Projects</span>
+        </h2>
+        <p class="mt-4 text-dark-400 max-w-xl">
+          A selection of projects showcasing my expertise in AI, full-stack development, and problem solving.
+        </p>
+      </div>
+      <a
+        href="/projects"
+        class="mt-4 sm:mt-0 inline-flex items-center gap-2 text-sm text-primary-400 hover:text-primary-300 font-medium transition-colors"
+      >
+        View All Projects
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+        </svg>
+      </a>
+    </div>
+
+    <!-- Cards Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {featured.map((project, i) => (
+        <div class={`animate-fade-in-up animate-delay-${(i + 1) * 100}`}>
+          <ProjectCard project={project} />
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

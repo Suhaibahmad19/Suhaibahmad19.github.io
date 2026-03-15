@@ -1,0 +1,91 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { projects } from '../data/projects';
+
+const categories = ['All', 'AI / ML', 'Full Stack', 'Web Apps'];
+---
+
+<BaseLayout title="Projects" description="Explore Suhaib Ahmad's portfolio of AI, full-stack, and web application projects.">
+  <section class="py-12 sm:py-16">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <!-- Header -->
+      <div class="text-center mb-12">
+        <h1 class="text-4xl sm:text-5xl font-bold animate-fade-in-up">
+          My <span class="gradient-text">Projects</span>
+        </h1>
+        <p class="mt-4 text-dark-400 max-w-xl mx-auto animate-fade-in-up animate-delay-100">
+          A collection of projects spanning AI/ML, full-stack applications, and web development.
+        </p>
+      </div>
+
+      <!-- Filter Buttons -->
+      <div class="flex flex-wrap justify-center gap-2 mb-12 animate-fade-in-up animate-delay-200" id="filter-container">
+        {categories.map((cat) => (
+          <button
+            data-filter={cat}
+            class:list={[
+              'filter-btn px-5 py-2 rounded-full text-sm font-medium transition-all duration-200 cursor-pointer',
+              cat === 'All'
+                ? 'gradient-bg text-white shadow-lg shadow-primary-600/20'
+                : 'bg-white/5 text-dark-400 border border-dark-700 hover:border-primary-500/50 hover:text-white',
+            ]}
+          >
+            {cat}
+          </button>
+        ))}
+      </div>
+
+      <!-- Projects Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="projects-grid">
+        {projects.map((project, i) => (
+          <div
+            class={`project-item animate-fade-in-up animate-delay-${Math.min((i + 1) * 100, 500)}`}
+            data-category={project.category}
+          >
+            <ProjectCard project={project} />
+          </div>
+        ))}
+      </div>
+
+      <!-- Empty state -->
+      <div id="empty-state" class="hidden text-center py-16">
+        <p class="text-dark-500 text-lg">No projects found in this category.</p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script is:inline>
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  const projectItems = document.querySelectorAll('.project-item');
+  const emptyState = document.getElementById('empty-state');
+
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const filter = btn.getAttribute('data-filter');
+
+      // Update active button
+      filterBtns.forEach(b => {
+        b.classList.remove('gradient-bg', 'text-white', 'shadow-lg', 'shadow-primary-600/20');
+        b.classList.add('bg-white/5', 'text-dark-400', 'border', 'border-dark-700');
+      });
+      btn.classList.add('gradient-bg', 'text-white', 'shadow-lg', 'shadow-primary-600/20');
+      btn.classList.remove('bg-white/5', 'text-dark-400', 'border', 'border-dark-700');
+
+      // Filter projects
+      let visibleCount = 0;
+      projectItems.forEach(item => {
+        const category = item.getAttribute('data-category');
+        if (filter === 'All' || category === filter) {
+          item.style.display = '';
+          visibleCount++;
+        } else {
+          item.style.display = 'none';
+        }
+      });
+
+      emptyState.classList.toggle('hidden', visibleCount > 0);
+    });
+  });
+</script>

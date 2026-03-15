@@ -1,0 +1,160 @@
+---
+const currentPath = Astro.url.pathname;
+
+const navLinks = [
+  { href: '/', label: 'Home' },
+  { href: '/about', label: 'About' },
+  { href: '/projects', label: 'Projects' },
+  { href: '/experience', label: 'Experience' },
+  { href: '/contact', label: 'Contact' },
+];
+---
+
+<header
+  id="navbar"
+  class="fixed top-0 left-0 right-0 z-50 nav-bg transition-all duration-300"
+>
+  <nav class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16">
+      <!-- Logo -->
+      <a href="/" class="flex items-center gap-2 group" id="nav-logo">
+        <span class="text-xl font-bold gradient-text group-hover:opacity-80 transition-opacity">
+          SA
+        </span>
+        <span class="text-sm font-medium text-dark-400 hidden sm:inline">
+          Suhaib Ahmad
+        </span>
+      </a>
+
+      <!-- Desktop Nav -->
+      <div class="hidden md:flex items-center gap-1" id="nav-desktop-links">
+        {navLinks.map((link) => (
+          <a
+            href={link.href}
+            class:list={[
+              'px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200',
+              currentPath === link.href || (link.href !== '/' && currentPath.startsWith(link.href))
+                ? 'text-primary-400 bg-primary-500/10'
+                : 'text-dark-300 hover:text-white hover:bg-white/5',
+            ]}
+          >
+            {link.label}
+          </a>
+        ))}
+        <!-- Theme Toggle -->
+        <button
+          id="theme-toggle-desktop"
+          class="ml-2 p-2 rounded-lg text-dark-400 hover:text-primary-400 hover:bg-white/5 transition-all duration-200"
+          aria-label="Toggle theme"
+        >
+          <svg id="sun-icon-desktop" class="w-5 h-5 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+          </svg>
+          <svg id="moon-icon-desktop" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Mobile Menu Button -->
+      <div class="flex items-center gap-2 md:hidden">
+        <button
+          id="theme-toggle-mobile"
+          class="p-2 rounded-lg text-dark-400 hover:text-primary-400 transition-all"
+          aria-label="Toggle theme"
+        >
+          <svg id="sun-icon-mobile" class="w-5 h-5 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+          </svg>
+          <svg id="moon-icon-mobile" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+          </svg>
+        </button>
+        <button
+          id="mobile-menu-btn"
+          class="p-2 rounded-lg text-dark-300 hover:text-white hover:bg-white/5 transition-all"
+          aria-label="Toggle menu"
+        >
+          <svg id="menu-open-icon" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+          <svg id="menu-close-icon" class="w-6 h-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden md:hidden pb-4">
+      <div class="flex flex-col gap-1 pt-2 border-t border-white/10">
+        {navLinks.map((link) => (
+          <a
+            href={link.href}
+            class:list={[
+              'px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200',
+              currentPath === link.href || (link.href !== '/' && currentPath.startsWith(link.href))
+                ? 'text-primary-400 bg-primary-500/10'
+                : 'text-dark-300 hover:text-white hover:bg-white/5',
+            ]}
+          >
+            {link.label}
+          </a>
+        ))}
+      </div>
+    </div>
+  </nav>
+</header>
+
+<!-- Spacer for fixed navbar -->
+<div class="h-16"></div>
+
+<script is:inline>
+  // Mobile menu toggle
+  const menuBtn = document.getElementById('mobile-menu-btn');
+  const mobileMenu = document.getElementById('mobile-menu');
+  const menuOpenIcon = document.getElementById('menu-open-icon');
+  const menuCloseIcon = document.getElementById('menu-close-icon');
+
+  menuBtn?.addEventListener('click', () => {
+    const isHidden = mobileMenu?.classList.contains('hidden');
+    mobileMenu?.classList.toggle('hidden');
+    menuOpenIcon?.classList.toggle('hidden');
+    menuCloseIcon?.classList.toggle('hidden');
+  });
+
+  // Theme toggle
+  function toggleTheme() {
+    const html = document.documentElement;
+    const current = html.getAttribute('data-theme');
+    const next = current === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+    updateThemeIcons(next);
+  }
+
+  function updateThemeIcons(theme) {
+    const sunDesktop = document.getElementById('sun-icon-desktop');
+    const moonDesktop = document.getElementById('moon-icon-desktop');
+    const sunMobile = document.getElementById('sun-icon-mobile');
+    const moonMobile = document.getElementById('moon-icon-mobile');
+
+    if (theme === 'dark') {
+      sunDesktop?.classList.add('hidden');
+      moonDesktop?.classList.remove('hidden');
+      sunMobile?.classList.add('hidden');
+      moonMobile?.classList.remove('hidden');
+    } else {
+      sunDesktop?.classList.remove('hidden');
+      moonDesktop?.classList.add('hidden');
+      sunMobile?.classList.remove('hidden');
+      moonMobile?.classList.add('hidden');
+    }
+  }
+
+  document.getElementById('theme-toggle-desktop')?.addEventListener('click', toggleTheme);
+  document.getElementById('theme-toggle-mobile')?.addEventListener('click', toggleTheme);
+
+  // Initialize icons
+  updateThemeIcons(document.documentElement.getAttribute('data-theme') || 'dark');
+</script>
